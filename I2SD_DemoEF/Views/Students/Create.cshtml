@@ -3,7 +3,12 @@
 @{
     ViewData["Title"] = "Create";
 }
-
+@if(ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Error
+    </div>
+})
 <h1>Create</h1>
 
 <h4>Student</h4>

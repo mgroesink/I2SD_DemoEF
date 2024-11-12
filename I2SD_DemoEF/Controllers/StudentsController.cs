@@ -48,8 +48,12 @@ namespace I2SD_DemoEF.Controllers
         // GET: Students/Create
         public IActionResult Create()
         {
-            ViewData["SlbID"] = new SelectList(_context.Teachers, "TeacherID", "TeacherID");
-            return View();
+            ViewData["SlbID"] = new SelectList(
+                _context.Teachers.ToList().OrderBy(t => t.ToString())
+                    .Select(s => new { s.TeacherID, Name = s.ToString() }),
+                "TeacherID",
+                "Name"
+            ); return View();
         }
 
         // POST: Students/Create
@@ -61,11 +65,23 @@ namespace I2SD_DemoEF.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(student);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Add(student);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Microsoft.Data.SqlClient.SqlException ex)
+                {
+                    ViewBag.Error = ex.Message;
+                }
             }
-            ViewData["SlbID"] = new SelectList(_context.Teachers, "TeacherID", "TeacherID", student.SlbID);
+            ViewData["SlbID"] = new SelectList(
+                _context.Teachers.ToList().OrderBy(t => t.ToString())
+                    .Select(s => new { s.TeacherID, Name = s.ToString() }),
+                "TeacherID",
+                "Name"
+            ); 
             return View(student);
         }
 
@@ -82,8 +98,12 @@ namespace I2SD_DemoEF.Controllers
             {
                 return NotFound();
             }
-            ViewData["SlbID"] = new SelectList(_context.Teachers, "TeacherID", "TeacherID", student.SlbID);
-            return View(student);
+            ViewData["SlbID"] = new SelectList(
+                _context.Teachers.ToList().OrderBy(t => t.ToString())
+                    .Select(s => new { s.TeacherID, Name = s.ToString() }),
+                "TeacherID",
+                "Name"
+            ); return View(student);
         }
 
         // POST: Students/Edit/5
@@ -118,8 +138,12 @@ namespace I2SD_DemoEF.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SlbID"] = new SelectList(_context.Teachers, "TeacherID", "TeacherID", student.SlbID);
-            return View(student);
+            ViewData["SlbID"] = new SelectList(
+                _context.Teachers.ToList().OrderBy(t => t.ToString())
+                    .Select(s => new { s.TeacherID, Name = s.ToString() }),
+                "TeacherID",
+                "Name"
+            ); return View(student);
         }
 
         // GET: Students/Delete/5
