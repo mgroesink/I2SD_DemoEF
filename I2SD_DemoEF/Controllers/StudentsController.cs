@@ -22,7 +22,8 @@ namespace I2SD_DemoEF.Controllers
         // GET: Students
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Students.ToListAsync());
+            var applicationDbContext = _context.Students.Include(s => s.Slb);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Students/Details/5
@@ -34,6 +35,7 @@ namespace I2SD_DemoEF.Controllers
             }
 
             var student = await _context.Students
+                .Include(s => s.Slb)
                 .FirstOrDefaultAsync(m => m.StudentID == id);
             if (student == null)
             {
@@ -46,6 +48,7 @@ namespace I2SD_DemoEF.Controllers
         // GET: Students/Create
         public IActionResult Create()
         {
+            ViewData["SlbID"] = new SelectList(_context.Teachers, "TeacherID", "TeacherID");
             return View();
         }
 
@@ -54,7 +57,7 @@ namespace I2SD_DemoEF.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StudentID,FirstName,MiddleName,LastName,Birthdate")] Student student)
+        public async Task<IActionResult> Create([Bind("StudentID,FirstName,MiddleName,LastName,Birthdate,SlbID")] Student student)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +65,7 @@ namespace I2SD_DemoEF.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["SlbID"] = new SelectList(_context.Teachers, "TeacherID", "TeacherID", student.SlbID);
             return View(student);
         }
 
@@ -78,6 +82,7 @@ namespace I2SD_DemoEF.Controllers
             {
                 return NotFound();
             }
+            ViewData["SlbID"] = new SelectList(_context.Teachers, "TeacherID", "TeacherID", student.SlbID);
             return View(student);
         }
 
@@ -86,7 +91,7 @@ namespace I2SD_DemoEF.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("StudentID,FirstName,MiddleName,LastName,Birthdate")] Student student)
+        public async Task<IActionResult> Edit(string id, [Bind("StudentID,FirstName,MiddleName,LastName,Birthdate,SlbID")] Student student)
         {
             if (id != student.StudentID)
             {
@@ -113,6 +118,7 @@ namespace I2SD_DemoEF.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["SlbID"] = new SelectList(_context.Teachers, "TeacherID", "TeacherID", student.SlbID);
             return View(student);
         }
 
@@ -125,6 +131,7 @@ namespace I2SD_DemoEF.Controllers
             }
 
             var student = await _context.Students
+                .Include(s => s.Slb)
                 .FirstOrDefaultAsync(m => m.StudentID == id);
             if (student == null)
             {

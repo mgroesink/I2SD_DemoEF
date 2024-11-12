@@ -14,6 +14,7 @@ namespace I2SD_DemoEF
         public string? MiddleName { get; set; } = null;
         [Required, MaxLength(50)]
         public string LastName { get; set; } = string.Empty;
+        [DataType(DataType.Date)]
         public DateTime Birthdate { get; set; } = DateTime.MinValue;
         public List<Result> Results { get; set; } = new List<Result>();
         public string? SlbID { get; set; } = null;
