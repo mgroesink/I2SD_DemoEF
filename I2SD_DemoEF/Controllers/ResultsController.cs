@@ -102,25 +102,14 @@ namespace I2SD_DemoEF.Controllers
         }
 
         // GET: Results/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(string studentID, string courseID, DateTime resultDate)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var result = await _context.Results.FindAsync(id);
+            var result = await _context.Results.Include(r=>r.Course).Include(r=>r.Student).Include(r=>r.Teacher).FirstOrDefaultAsync(m => m.StudentID == studentID && m.CourseID == courseID && m.ResultDate == resultDate);
             if (result == null)
             {
                 return NotFound();
             }
-            ViewData["CourseID"] = new SelectList(_context.Courses.OrderBy(c => c.CourseName), "CourseID", "CourseName");
-            ViewData["StudentID"] = new SelectList(
-                _context.Students.ToList().OrderBy(s => s.ToString())
-                    .Select(s => new { s.StudentID, Name = s.ToString() }),
-                "StudentID",
-                "Name"
-            );
+
             ViewData["TeacherID"] = new SelectList(
                 _context.Teachers.ToList().OrderBy(t => t.ToString())
                     .Select(s => new { s.TeacherID, Name = s.ToString() }),
@@ -135,17 +124,23 @@ namespace I2SD_DemoEF.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("StudentID,CourseID,TeacherID,Score,ResultDate")] Result result)
+        public async Task<IActionResult> Edit([Bind("StudentID,CourseID,TeacherID,Score,ResultDate")] Result oldResult)
         {
-            if (id != result.StudentID)
-            {
-                return NotFound();
-            }
-
+            Result result = new();
             if (ModelState.IsValid)
             {
                 try
                 {
+
+                    result = await _context.Results.FirstOrDefaultAsync(m => m.StudentID == oldResult.StudentID && m.CourseID == oldResult.CourseID && m.ResultDate == oldResult.ResultDate);
+                    if (result == null)
+                    {
+                        return NotFound();
+                    }
+                    result.CourseID = oldResult.CourseID;
+                    result.TeacherID = oldResult.TeacherID;
+                    result.Score = oldResult.Score;
+                    result.ResultDate = oldResult.ResultDate;
                     _context.Update(result);
                     await _context.SaveChangesAsync();
                 }
