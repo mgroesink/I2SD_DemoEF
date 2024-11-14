@@ -8,45 +8,50 @@
 
 <h4>Result</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Student" class="control-label"></label>
-                <input type="text" disabled value="@Model.Student" class="form-control" />
-            </div>
-            <div class="form-group">
-                Teacher
-                <select asp-for="TeacherID" class="form-control" asp-items="ViewBag.TeacherID"></select>
-                <span asp-validation-for="TeacherID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                Course
-                <input type="text" disabled value="@Model.Course.CourseName" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Score" class="control-label"></label>
-                <input asp-for="Score" class="form-control" />
-                <span asp-validation-for="Score" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                @{string resultDate = Model.ResultDate.ToString("dd-MM-yyyy");}
-                <label asp-for="ResultDate" class="control-label"></label>
-                <input type="text" disabled value="@resultDate" class="form-control"/>
-                <span asp-validation-for="ResultDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="Edit">
+    <input asp-for="StudentID" type="hidden" />
+    <input asp-for="CourseID" type="hidden" />
+    <input asp-for="ResultDate" type="hidden"/>
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="StudentID" class="control-label"></label>
+                    <input type="text" disabled value="@Model.Student" class="form-control" />
+                </div>
+                <div class="form-group">
+                    Teacher
+                    <select asp-for="TeacherID" class="form-control" asp-items="ViewBag.TeacherID"></select>
+                    <span asp-validation-for="TeacherID" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    Course
+                    <input type="text" disabled value="@Model.Course.CourseName" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Score" class="control-label"></label>
+                    <input asp-for="Score" class="form-control" />
+                    <span asp-validation-for="Score" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    @{
+                        string resultDate = Model.ResultDate.ToString("dd-MM-yyyy");
+                    }
+                    <label asp-for="ResultDate" class="control-label"></label>
+                    <input type="text" disabled value="@resultDate" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+</form>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
