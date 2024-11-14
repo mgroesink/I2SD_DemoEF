@@ -14,7 +14,7 @@
     <input asp-for="ResultDate" type="hidden"/>
     <div class="row">
         <div class="col-md-4">
-            <form asp-action="Edit">
+            <form method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="StudentID" class="control-label"></label>
@@ -39,7 +39,7 @@
                         string resultDate = Model.ResultDate.ToString("dd-MM-yyyy");
                     }
                     <label asp-for="ResultDate" class="control-label"></label>
-                    <input type="text" disabled value="@resultDate" class="form-control" />
+                    <input name="resultDate" type="text" disabled value="@resultDate" class="form-control" />
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Save" class="btn btn-primary" />

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using I2SD_DemoEF;
 using I2SD_DemoEF.Data;
+using System.Globalization;
 
 namespace I2SD_DemoEF.Controllers
 {
@@ -124,56 +125,13 @@ namespace I2SD_DemoEF.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("StudentID,CourseID,TeacherID,Score,ResultDate")] Result oldResult)
+        public async Task<IActionResult> Edit([Bind("StudentID,CourseID,TeacherID,Score")] Result oldResult, string resultDate)
         {
-            Result result = new();
-            if (ModelState.IsValid)
-            {
-                try
-                {
+            var resultDt = DateTime.ParseExact(resultDate, "MM/dd/yyyy HH:mm:ss",CultureInfo.InvariantCulture);
+            string sql = "UPDATE results SET TeacherID = {1}, Score = {2} WHERE StudentID = {4} AND CourseID = {5} AND ResultDate = {6}";
+            _context.Database.ExecuteSqlRaw(sql, oldResult.CourseID, oldResult.TeacherID, oldResult.Score, oldResult.ResultDate, oldResult.StudentID, oldResult.CourseID, resultDt);
 
-                    result = await _context.Results.FirstOrDefaultAsync(m => m.StudentID == oldResult.StudentID && m.CourseID == oldResult.CourseID && m.ResultDate == oldResult.ResultDate);
-                    if (result == null)
-                    {
-                        return NotFound();
-                    }
-                    result.CourseID = oldResult.CourseID;
-                    result.TeacherID = oldResult.TeacherID;
-                    result.Score = oldResult.Score;
-                    result.ResultDate = oldResult.ResultDate;
-                    _context.Update(result);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ResultExists(result.StudentID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CourseID"] =
-                new SelectList(_context.Courses.OrderBy(c => c.CourseName), "CourseID", "CourseName");
-            ViewData["StudentID"] =
-                new SelectList(
-                _context.Students.ToList().OrderBy(s => s.ToString())
-                    .Select(s => new { s.StudentID, Name = s.ToString() }),
-                "StudentID",
-                "Name"
-            );
-            ViewData["TeacherID"] =
-                new SelectList(
-                _context.Teachers.ToList().OrderBy(t => t.ToString())
-                    .Select(s => new { s.TeacherID, Name = s.ToString() }),
-                "TeacherID",
-                "Name"
-            );
-            return View(result);
+            return RedirectToAction("Index");
         }
 
         // GET: Results/Delete/5
