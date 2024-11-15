@@ -28,26 +28,30 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Student.StudentID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Course.CourseID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Teacher.TeacherID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Score)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { studentID=item.Student.StudentID,courseID=item.Course.CourseID, resultDate = item.ResultDate}) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            var studentName = item.Student.ToString();
+            var teacherName = item.Teacher.ToString();
+
+            <tr>
+                <td>
+                    @studentName
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Course.CourseName)
+                </td>
+                <td>
+                    @teacherName
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Score)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { studentID = item.Student.StudentID, courseID = item.Course.CourseID, resultDate = item.ResultDate }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

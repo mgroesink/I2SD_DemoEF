@@ -23,7 +23,9 @@ namespace I2SD_DemoEF.Controllers
         // GET: Results
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Results.Include(r => r.Course).Include(r => r.Student).Include(r => r.Teacher);
+            var applicationDbContext = _context.Results.Include(r => r.Course).Include(r => r.Student)
+                .Include(r => r.Teacher).OrderBy(r=>r.Student.LastName)
+                .ThenBy(r=>r.Student.FirstName).ThenBy(r=>r.Course.CourseName).ThenBy(r=>r.ResultDate);
             return View(await applicationDbContext.ToListAsync());
         }
 
