@@ -19,7 +19,7 @@ namespace I2SD_DemoEF
         public string? TeacherID { get; set; } = string.Empty;
         public Teacher? Teacher { get; set; } = null!;
         public double Score { get; set; }
-        [DataType(DataType.Date),DisplayFormat(DataFormatString = "yyyy-MM-dd",ApplyFormatInEditMode =true)]
+        [DataType(DataType.Date)]
         public DateTime ResultDate { get; set; } = DateTime.MinValue;
     }
 }

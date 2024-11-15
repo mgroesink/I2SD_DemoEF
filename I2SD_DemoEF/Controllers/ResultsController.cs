@@ -105,7 +105,8 @@ namespace I2SD_DemoEF.Controllers
         // GET: Results/Edit/5
         public async Task<IActionResult> Edit(string studentID, string courseID, DateTime resultDate)
         {
-            var result = await _context.Results.Include(r=>r.Course).Include(r=>r.Student).Include(r=>r.Teacher).FirstOrDefaultAsync(m => m.StudentID == studentID && m.CourseID == courseID && m.ResultDate == resultDate);
+            var result = await _context.Results.Include(r=>r.Course).Include(r=>r.Student).Include(r=>r.Teacher)
+                .FirstOrDefaultAsync(m => m.StudentID == studentID && m.CourseID == courseID && m.ResultDate == resultDate);
             if (result == null)
             {
                 return NotFound();
@@ -129,7 +130,8 @@ namespace I2SD_DemoEF.Controllers
         {
             var resultDt = DateTime.ParseExact(resultDate, "MM/dd/yyyy HH:mm:ss",CultureInfo.InvariantCulture);
             string sql = "UPDATE results SET TeacherID = {1}, Score = {2} WHERE StudentID = {4} AND CourseID = {5} AND ResultDate = {6}";
-            _context.Database.ExecuteSqlRaw(sql, oldResult.CourseID, oldResult.TeacherID, oldResult.Score, oldResult.ResultDate, oldResult.StudentID, oldResult.CourseID, resultDt);
+            _context.Database.ExecuteSqlRaw(sql, oldResult.CourseID, oldResult.TeacherID, 
+                oldResult.Score, oldResult.ResultDate, oldResult.StudentID, oldResult.CourseID, resultDt);
 
             return RedirectToAction("Index");
         }
