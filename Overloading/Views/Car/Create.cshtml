@@ -1,0 +1,31 @@
+﻿@model Car
+
+@{
+    ViewData["Title"] = "Create";
+    var maxYear = DateTime.Now.Year;
+    var minYear = maxYear - 100;
+}
+
+<h1>Create</h1>
+
+<h4>Car</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" action="Car/Create">
+            <div class="form-group">
+                <label for="make" class="control-label">Merk</label>
+                <input id="make" name="Make" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="model" class="control-label">Type</label>
+                <input id="model" name="Model" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="year" class="control-label">Bouwjaar</label>
+                <input type="number" min="@minYear" max="@maxYear" id="year" name="Year" class="form-control" />
+            </div>
+            <button type="submit">Toevoegen</button>
+        </form>
+    </div>
+</div>
